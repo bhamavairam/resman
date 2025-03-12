@@ -5,7 +5,7 @@ exports.checkToken = (req,res, next ) => {
     {
         console.log( 'check body for token'+req.body);
         const token = req.header('Authorization');
-        if (!token) return res.status(401).json( { error: 'Access Denied'});
+        if (!token) return res.status(401).json( { error: 'Security Token Not available: Access Denied'});
 
         try {
             const decoded = jwt.verify(token, process.env.secret);

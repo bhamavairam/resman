@@ -28,7 +28,7 @@ exports.profile = async (req, res, next) => {
 
       var profile=0;
       if (req.params.id) profile=req.params.id;
-      console.log("prfile "+profile)
+      console.log("profile "+profile)
 
       const [[[{affectedRows}]]] = await db.query("CALL profile_add_or_edit(?,?,?,?,?,?,?,?,?)",
         [profile, req.body.user_id, dob,employee_id,job_title,address1,address2,address3,address4]
@@ -47,4 +47,33 @@ exports.profile = async (req, res, next) => {
         })
     }
 }
+
+exports.get_profile_by_user_id = async (req,res,next) => {
+    try
+    {
+        const [profile] = await db.query("SELECT * from user_profile WHERE user_id = ?", [req.params.id]);
+        if (profile[0])
+        {    
+            res.status(201).json( {
+            status : 'success',
+            rowsaffected: profile[0]
+            })
+        }
+        else{
+            res.status(400).json( {
+                status : 'failed',
+                message: "Invalid ID "
+                })    
+        }
+    }
+    catch(err)
+    {
+        res.status(400).json( {
+            status : 'failed',
+            message: "Invalid ID "
+            })    
+
+    }
+}
+
 

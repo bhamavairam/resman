@@ -15,12 +15,15 @@ router
 
 router
     .route('/profile')
-    .post(userprofileController.profile)
+    .post(jwtController.checkToken, userprofileController.profile)
 
 router
     .route('/profile/:id')
     .put(jwtController.checkToken, userprofileController.profile)
 
+router
+    .route('/profile/:id')
+    .get(jwtController.checkToken,userprofileController.get_profile_by_user_id)
 
 router
     .route('/skills')
