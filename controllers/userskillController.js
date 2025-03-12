@@ -5,6 +5,7 @@ sp_skills = async ( skill, req, res)=>
     {
         try
         {
+            console.log('params '+skill +", "+req.body.user_id)
           const [[[{affectedRows}]]] = await db.query("CALL skill_add_or_edit(?,?,?,?)",
             [skill, req.body.skill, req.body.rating, req.body.user_id])
      
@@ -32,7 +33,7 @@ exports.modifyskill = async (req, res, next) => {
 
     if ( skill[0] )
     {
-        sp_task(req.params.id, req, res)
+        sp_skills(req.params.id, req, res)
     }
     else{
             res.status(400).json(  {

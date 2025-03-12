@@ -18,11 +18,11 @@ router
 
 router
     .route('/profile')
-    .post(jwtController.checkToken, userprofileController.profile)
+    .post(jwtController.checkToken, userprofileController.addprofile)
 
 router
     .route('/profile/:id')
-    .put(jwtController.checkToken, userprofileController.profile)
+    .put(jwtController.checkToken, userprofileController.modifyprofile)
 
 router
     .route('/profile/:id')

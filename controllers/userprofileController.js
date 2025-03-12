@@ -11,9 +11,28 @@ exports.checkbody = (req,res, next ) => {
     next(); 
 };
 
+sp_profile= async (profile, user_id, dob, employee_id, job_title, address1, address2, address3, address4)=>
+{
+    const [[[{affectedRows}]]] = await db.query("CALL profile_add_or_edit(?,?,?,?,?,?,?,?,?)",
+        [profile, user_id, dob,employee_id,job_title,address1,address2,address3,address4]
+         )
+ 
+    if (affectedRows)
+    {
+        res.status(201).json( {
+        status : 'success',
+        data   : affectedRows
+        })
+    }
+    else {
+        res.status(201).json( {
+            status : 'failed',
+            message   : "Unable to add/update profile"
+        })
+    }
+ }
 
-exports.profile = async (req, res, next) => {
-
+exports.addprofile = async (req, res, next) => {
     try
     {  
         var dob, employee_id, job_title, address1, address2, address3, address4;
@@ -25,19 +44,7 @@ exports.profile = async (req, res, next) => {
         if (req.body.address2)  address2 = req.body.address2;
         if (req.body.address3)  address3 = req.body.address3;
         if (req.body.address4)  address4 = req.body.address4;
-
-      var profile=0;
-      if (req.params.id) profile=req.params.id;
-      console.log("profile "+profile)
-
-      const [[[{affectedRows}]]] = await db.query("CALL profile_add_or_edit(?,?,?,?,?,?,?,?,?)",
-        [profile, req.body.user_id, dob,employee_id,job_title,address1,address2,address3,address4]
-         )
- 
-        res.status(201).json( {
-            status : 'success',
-            rowsaffected: affectedRows
-        })
+        sp_profile(0, req.body.user_id, dob, employee_id, job_title, address1, address2, address3, address4);
     }
     catch (err) {
         console.log("Error adding :"+err)
@@ -47,6 +54,22 @@ exports.profile = async (req, res, next) => {
         })
     }
 }
+
+exports.modifyprofile = async (req, res, next) => {
+
+    try
+    {  
+        sp_profile(req.params.id, req.user_id, req.body.dob, req.body.employee_id, req.body.job_title, req.body.address1, req.body.address2, req.body.address3, req.body.address4);
+    }
+    catch (err) {
+        console.log("Error adding :"+err)
+        res.status(400).json(  {
+            status: 'failed',
+            message: err
+        })
+    }
+}
+
 
 exports.get_profile_by_user_id = async (req,res,next) => {
     try
