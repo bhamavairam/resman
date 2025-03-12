@@ -67,3 +67,32 @@ exports.login =async (req, res, next) => {
     })
 }
 }
+
+
+exports.getallusers = async (req, res, next) => {
+    
+    try
+    {
+        const [users] = await db.query("SELECT * from users");
+
+        if ( users[0] )
+        {
+            res.status(201).json( {
+                status : 'success',
+                data: users
+            })
+                }
+        else{
+            res.status(400).json(  {
+                status: 'failed',  
+                message: 'Stories not found in db'
+            })
+        }        
+    }
+    catch (err) {
+    res.status(400).json(  {
+        status: 'failed',
+        message: err
+    })
+    }
+}

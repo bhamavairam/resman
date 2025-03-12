@@ -64,21 +64,25 @@ exports.assigntask = async (req, res, next) => {
     }
 }
 
-exports.usertask = async (req, res, next) => {
+exports.get_task_by_user_id = async (req, res, next) => {
     try
     {
-        console.log("calling sp_get_my_tasks : "+req.body.user_id);
+        const [rows] = await db.query('CALL sp_get_user_tasks(?)', [req.params.id]);
 
-        const [rows] = await db.query('CALL sp_get_user_tasks(?)', [req.body.user_id]);
-
-//      const [[[{affectedRows}]]] = await db.query("CALL sp_get_my_tasks(?)",
-  //      [req.body.user_id]
-    //     )
-         console.log("Fetched Data:" + rows)
+//        console.log(JSON.stringify(rows));
+        if (rows[0].length>0)
+        {
         res.status(201).json( {
             status : 'success',
             records : rows[0]
-        })
+        })}
+        else
+        {
+            res.status(201).json( {
+                status : 'failed',
+                message : "no tasks assigned for this user"
+        })}
+    
     }
     catch (err) {
         res.status(400).json(  {

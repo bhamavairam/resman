@@ -6,12 +6,11 @@ const router = express.Router();
 
 router
     .route('/')
-    .post(tasksController.addtask)
+    .post(tasksController.addtask) //Add task by ADMIN
 
 router
     .route('/assign')
-    .post(tasksController.assigntask)
-
+    .post(tasksController.assigntask) //Assign task by ADMIN
 
 router
     .route('/:id')
@@ -27,7 +26,7 @@ router
 
 
 router
-    .route('/usertasks')
-    .get(tasksController.usertask)
+    .route('/userid/:id')
+    .get(tasksController.get_task_by_user_id)
 
 module.exports = router;

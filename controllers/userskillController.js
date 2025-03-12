@@ -1,63 +1,78 @@
+const { json } = require('express')
 const db = require('../mysqllib/db')
 
-
-update_skill = async function(req, res){
-    try{
+sp_skills = async ( skill, req, res)=>
+    {
+        try
+        {
+          const [[[{affectedRows}]]] = await db.query("CALL skill_add_or_edit(?,?,?,?)",
+            [skill, req.body.skill, req.body.rating, req.body.user_id])
+     
+            res.status(201).json( {
+                status : 'success',
+                data   : affectedRows
+            })
+        }
+        catch (err) {
+            res.status(400).json(  {
+                status: 'failed',
+    
+                message: err
+            })
+        }
+    }
+    
+exports.addskill = async (req, res, next) => {
+    sp_skills(0, req, res);
+}
+    
+    
+exports.modifyskill = async (req, res, next) => {
     const [skill] = await db.query("SELECT * from user_skills WHERE id = ? AND user_id = ?", [req.params.id,req.body.user_id]);
 
     if ( skill[0] )
     {
-        const [[[{affectedRows}]]] = await db.query("CALL skill_add_or_edit(?,?,?,?)",
-            [req.params.id, req.body.skill, req.body.rating, req.body.user_id]
-             )
-     
-            res.status(201).json( {
-                status : 'success',
-                rowsaffected: affectedRows
-            })    
-    
-    } else {
-        res.status(400).json(  {
-            status: 'failed',
-            message: 'skill not found in user'
-        })
-    
+        sp_task(req.params.id, req, res)
     }
-   }
-   catch (err) {
-    res.status(400).json(  {
-        status: 'failed',
-        message: err
-    })
+    else{
+            res.status(400).json(  {
+                status: 'failed',  
+                message: 'skill not found in db'
+            })
+    }        
 }
-}
-
-exports.skills = async (req, res, next) => {
-
+    
+    
+exports.get_skill_by_user_id = async (req, res, next) => {
     try
     {
-      var skill=0;  
-      if (req.params.id) 
-      { 
-        await update_skill(req,res);
-      }
-      else{
-      const [[[{affectedRows}]]] = await db.query("CALL skill_add_or_edit(?,?,?,?)",
-        [0, req.body.skill, req.body.rating, req.body.user_id]
-         )
- 
+        const [skill] = await db.query("SELECT * from user_skills WHERE user_id = ? ", [req.params.id]);
+
+        console.log(JSON.stringify(skill));
+        if (skill[0])
+        {
         res.status(201).json( {
             status : 'success',
-            rowsaffected: affectedRows
-        })
-      }
+            records : skill
+        })}
+        else
+        {
+            res.status(201).json( {
+                status : 'failed',
+                message : "no skills added for this user"
+        })}
+    
     }
     catch (err) {
-        console.log("Error adding :"+err)
         res.status(400).json(  {
-            status: 'failed',
+            status: 'ERROR ',
+
             message: err
         })
     }
 }
+
+    
+
+
 

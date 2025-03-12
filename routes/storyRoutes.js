@@ -16,4 +16,8 @@ router
     .route('/')
     .get(storyController.getallstories)
 
+router
+    .route('/:id')
+    .get(storyController.getuserstories)
+
 module.exports = router;

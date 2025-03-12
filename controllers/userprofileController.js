@@ -62,7 +62,7 @@ exports.get_profile_by_user_id = async (req,res,next) => {
         else{
             res.status(400).json( {
                 status : 'failed',
-                message: "Invalid ID "
+                message: "Profile doesn't exist of user ID ["+req.params.id +"]"
                 })    
         }
     }
