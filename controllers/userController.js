@@ -42,19 +42,25 @@ exports.login =async (req, res, next) => {
 
     if ( !email || !password ) {
         res.status(400).json( {
-            status: 'failed',
+            status: false,
             message: 'mandatory fields missing'
         })
     }
 
     const user = await findUserbyEmail(email)
-    console.log("User found" + JSON.stringify(user))
+    if (!user) {
+       return res.status(200).json( {
+            status: false,
+            message: "User doesn't exists"
+            })
+    }
+        console.log("User found" + JSON.stringify(user))
 
 
    if( !user || !(await bcrypt.compare(password, user.password))) {
 //    if( !user || !(await bcrypt.compare(password, user.password))) {
-        res.status(400).json( {
-        status: 'failed',
+        return res.status(200).json( {
+        status: false,
         message: 'Invalid Credentials'
         })
    }
@@ -63,7 +69,9 @@ exports.login =async (req, res, next) => {
    const token = signToken(user.id, user.role);
 
     res.status(200).json({
-        token : token
+        status : true,
+        token : token,
+        data : { "id" : user.id, "role" : user.role}
     })
 }
 }
@@ -78,20 +86,20 @@ exports.getallusers = async (req, res, next) => {
         if ( users[0] )
         {
             res.status(201).json( {
-                status : 'success',
+                status : true,
                 data: users
             })
                 }
         else{
-            res.status(400).json(  {
-                status: 'failed',  
+            res.status(200).json(  {
+                status: false,  
                 message: 'Stories not found in db'
             })
         }        
     }
     catch (err) {
     res.status(400).json(  {
-        status: 'failed',
+        status: false,
         message: err
     })
     }

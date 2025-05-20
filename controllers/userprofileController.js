@@ -11,7 +11,7 @@ exports.checkbody = (req,res, next ) => {
     next(); 
 };
 
-sp_profile= async (profile, user_id, dob, employee_id, job_title, address1, address2, address3, address4)=>
+sp_profile= async (res, profile, user_id, dob, employee_id, job_title, address1, address2, address3, address4)=>
 {
     const [[[{affectedRows}]]] = await db.query("CALL profile_add_or_edit(?,?,?,?,?,?,?,?,?)",
         [profile, user_id, dob,employee_id,job_title,address1,address2,address3,address4]
@@ -44,7 +44,7 @@ exports.addprofile = async (req, res, next) => {
         if (req.body.address2)  address2 = req.body.address2;
         if (req.body.address3)  address3 = req.body.address3;
         if (req.body.address4)  address4 = req.body.address4;
-        sp_profile(0, req.body.user_id, dob, employee_id, job_title, address1, address2, address3, address4);
+        sp_profile(res, 0, req.body.user_id, dob, employee_id, job_title, address1, address2, address3, address4);
     }
     catch (err) {
         console.log("Error adding :"+err)

@@ -6,7 +6,7 @@ const jwtController = require('./../controllers/jwtcheck')
 const router = express.Router();
 
 router.route('/')
-      .get(jwtController.checkToken, userController.getallusers)
+      .get(userController.getallusers)
 
 router
     .route('/signup')
