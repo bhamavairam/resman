@@ -8,6 +8,9 @@ const router = express.Router();
 router.route('/')
       .get(userController.getallusers)
 
+router.route('/employees')
+    .get(userController.getallemployees)
+
 router
     .route('/signup')
     .post(userController.signup)

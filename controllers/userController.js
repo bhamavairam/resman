@@ -104,3 +104,31 @@ exports.getallusers = async (req, res, next) => {
     })
     }
 }
+
+exports.getallemployees = async (req, res, next) => {
+    
+    try
+    {
+        const [users] = await db.query("SELECT user_id,employee_id from user_profile");
+
+        if ( users[0] )
+        {
+            res.status(201).json( {
+                status : true,
+                data: users
+            })
+                }
+        else{
+            res.status(200).json(  {
+                status: false,  
+                message: 'Data not found in db'
+            })
+        }        
+    }
+    catch (err) {
+    res.status(400).json(  {
+        status: false,
+        message: err
+    })
+    }
+}
