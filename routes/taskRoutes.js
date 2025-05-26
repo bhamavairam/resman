@@ -21,12 +21,12 @@ router
     .get(tasksController.get_task_by_id)
 
 router
-    .route('/')
+    .route('/project/:id')
     .get(tasksController.getalltasks)
 
 
 router
     .route('/userid/:id')
-    .get(tasksController.get_task_by_user_id)
+    .get(tasksController.get_task_by_user_id) //GET tasks for an user
 
 module.exports = router;

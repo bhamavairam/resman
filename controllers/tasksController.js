@@ -46,8 +46,8 @@ exports.modifytask = async (req, res, next) => {
 exports.assigntask = async (req, res, next) => {
     try
     {
-      const [[[{affectedRows}]]] = await db.query("CALL assign_task_add(?,?)",
-        [req.body.user_id, req.body.task_id]
+      const [[[{affectedRows}]]] = await db.query("CALL assign_task_add(?,?,?,?,?)",
+        [req.body.user_id, req.body.task_id, req.body.start_date, req.body.end_date, req.body.capacity]
          )
  
         res.status(201).json( {
@@ -58,12 +58,13 @@ exports.assigntask = async (req, res, next) => {
     catch (err) {
         res.status(400).json(  {
             status: 'failed',
-
             message: err
         })
     }
 }
 
+
+//GET TASKS for an USER
 exports.get_task_by_user_id = async (req, res, next) => {
     try
     {
@@ -125,8 +126,8 @@ exports.getalltasks = async (req, res, next) => {
     
     try
     {
-        const [tasks] = await db.query("SELECT * from tasks");
-
+        const [tasks] = await db.query("SELECT * from tasks WHERE project_id = ?", [req.params.id]) ;
+ 
         if ( tasks[0] )
         {
             res.status(201).json( {
