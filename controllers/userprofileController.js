@@ -77,9 +77,9 @@ exports.modifyprofile = async (req, res, next) => {
 exports.get_profile_by_user_id = async (req,res,next) => {
     try
     {
-//        const [profile] = await db.query("SELECT * from user_profile WHERE user_id = ?", [req.params.id]);
+        const [profile] = await db.query("SELECT * from user_profile WHERE user_id = ?", [req.params.id]);
         console.log("user id "+req.user_id)
-        const [profile] = await db.query("SELECT * from user_profile WHERE user_id = ?", [req.body.user_id]);
+//        const [profile] = await db.query("SELECT * from user_profile WHERE user_id = ?", [req.body.user_id]);
 
 
         if (profile[0])

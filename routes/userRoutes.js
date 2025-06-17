@@ -28,7 +28,7 @@ router
     .put(jwtController.checkToken, userprofileController.modifyprofile)
 
 router
-    .route('/profile')
+    .route('/profile/:id')
     .get(jwtController.checkToken,userprofileController.get_profile_by_user_id)
 
 router
